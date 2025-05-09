@@ -14,6 +14,24 @@ from pathlib import Path
 import os
 import dj_database_url
 
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+
+# Allowed hosts
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(' ') if not DEBUG else []
+
+# Database configuration
+DATABASES = {
+    'default': dj_database_url.parse(os.environ.get('DATABASE_URL', ''))
+}
+
+# Static files configuration
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+] + MIDDLEWARE
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
