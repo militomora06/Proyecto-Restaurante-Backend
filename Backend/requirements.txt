@@ -3,8 +3,10 @@ dj-database-url==2.3.0
 Django==5.2.1
 djangorestframework==3.16.0
 gunicorn==23.0.0
-packaging==25.0
+packaging==23.2
 psycopg2-binary==2.9.10
 sqlparse==0.5.3
 typing_extensions==4.13.2
 whitenoise==6.9.0
+djangorestframework-simplejwt==5.2.2
+streamlit==1.32.0

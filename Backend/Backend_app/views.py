@@ -32,3 +32,23 @@ def login_usuario(request):
             return JsonResponse({'mensaje': 'Login exitoso', 'usuario': user.first_name})
         else:
             return JsonResponse({'mensaje': 'Credenciales inválidas'}, status=401)
+
+from rest_framework import viewsets, permissions
+from .models import Producto, Pedido, ItemPedido
+from .serializers import ProductoSerializer, PedidoSerializer
+from rest_framework.permissions import IsAuthenticated
+
+class ProductoViewSet(viewsets.ModelViewSet):
+    queryset = Producto.objects.all()
+    serializer_class = ProductoSerializer
+    permission_classes = [permissions.AllowAny]  # Público
+
+class PedidoViewSet(viewsets.ModelViewSet):
+    serializer_class = PedidoSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Pedido.objects.filter(usuario=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)

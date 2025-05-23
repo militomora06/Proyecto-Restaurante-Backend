@@ -77,7 +77,10 @@ WSGI_APPLICATION = "Backend.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL', ''))
+    'default': dj_database_url.parse(
+        'postgres://admin_rest:dsCBcxEa6Kjc8rrhCFjuFM9xsdWt5daE@dpg-d0ocdf95pdvs73ehte9g-a.oregon-postgres.render.com/restaurante_db_ad3u',
+        conn_max_age=600
+    )
 }
 
 
