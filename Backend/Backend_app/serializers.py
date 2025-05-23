@@ -34,3 +34,8 @@ class PedidoSerializer(serializers.ModelSerializer):
         for item_data in items_data:
             ItemPedido.objects.create(pedido=pedido, **item_data)
         return pedido
+    
+class ProductoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Producto
+        fields = '__all__'
