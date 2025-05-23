@@ -82,7 +82,7 @@ distro @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_ddk
 dj-database-url==2.3.0
 Django==5.2.1
 djangorestframework==3.16.0
-djangorestframework-simplejwt==5.2.2
+djangorestframework_simplejwt==5.5.0
 docstring-to-markdown @ file:///Users/builder/cbouss/perseverance-python-buildout/croot/docstring-to-markdown_1699242114044/work
 docutils @ file:///Users/builder/cbouss/perseverance-python-buildout/croot/docutils_1699238275731/work
 entrypoints @ file:///Users/builder/cbouss/perseverance-python-buildout/croot/entrypoints_1699242128888/work
