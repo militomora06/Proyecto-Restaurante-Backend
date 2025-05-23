@@ -13,25 +13,17 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from datetime import timedelta
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-n=zdm$#bw4cz#yct@15w4cs_vrof(9=6)$ee)qzb+pqq7o$ey2")
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-n=zdm$#bw4cz#yct@15w4cs_vrof(9=6)$ee)qzb+pqq7o$ey2"
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(' ') if not DEBUG else []
 
-
-# Application definition
-
+# Aplicaciones instaladas
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -39,12 +31,22 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    
+    # Terceros
     "rest_framework",
+    "rest_framework_simplejwt",
+    "corsheaders",
+    "whitenoise.runserver_nostatic",
+
+    # Local
     "Backend_app",
 ]
 
+# Middleware
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -72,21 +74,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "Backend.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+# Base de datos PostgreSQL en Render
 DATABASES = {
     'default': dj_database_url.parse(
-        'postgres://admin_rest:dsCBcxEa6Kjc8rrhCFjuFM9xsdWt5daE@dpg-d0ocdf95pdvs73ehte9g-a.oregon-postgres.render.com/restaurante_db_ad3u',
+        os.environ.get('DATABASE_URL', 'postgres://admin_rest:dsCBcxEa6Kjc8rrhCFjuFM9xsdWt5daE@dpg-d0ocdf95pdvs73ehte9g-a.oregon-postgres.render.com/restaurante_db_ad3u'),
         conn_max_age=600
     )
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
+# Validación de contraseñas
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -102,30 +98,36 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
+# Internacionalización
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
+# Archivos estáticos
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+# Django REST Framework + JWT
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-] + MIDDLEWARE
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+# CORS
+CORS_ALLOW_ALL_ORIGINS = True  # Solo para desarrollo
+# Para producción usa esto:
+# CORS_ALLOWED_ORIGINS = ['https://militomora06.github.io']
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
