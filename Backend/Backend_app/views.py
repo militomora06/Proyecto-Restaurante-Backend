@@ -44,6 +44,7 @@ class ProductoViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]  # Público
 
 class PedidoViewSet(viewsets.ModelViewSet):
+    queryset = Pedido.objects.all()
     serializer_class = PedidoSerializer
     permission_classes = [IsAuthenticated]
 
